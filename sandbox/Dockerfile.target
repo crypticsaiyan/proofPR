@@ -1,0 +1,35 @@
+# syntax=docker/dockerfile:1.7
+
+# Sandbox image for a real target repository.
+#
+# Built with the target's own checkout as the build context, so its declared
+# dependencies are installed here, ahead of time: the container runs with
+# --network none and cannot install anything later. Same isolation posture as
+# sandbox/Dockerfile.
+#
+#   docker build -f sandbox/Dockerfile.target \
+#     --build-arg PYTHON_VERSION=3.12 \
+#     -t proofpr-target-<name>:local path/to/target-checkout
+
+ARG PYTHON_VERSION=3.12
+FROM python:${PYTHON_VERSION}-slim-bookworm
+
+RUN groupadd --system --gid 10002 runner \
+ && useradd --system --uid 10002 --gid runner --home /work --create-home runner
+
+RUN pip install --no-cache-dir "pytest==8.3.4" "pytest-timeout==2.3.1" "coverage==7.6.10"
+
+# Only the dependency manifest is copied. The source itself is mounted read-only
+# per run, so the image never goes stale against the repository.
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt \
+ && rm -rf /root/.cache /tmp/requirements.txt
+
+WORKDIR /work
+USER runner
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_INPUT=1
+
+ENTRYPOINT ["python", "-m", "pytest"]
