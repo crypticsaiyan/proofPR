@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+build/
+dist/
+
+# Tooling caches
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Runtime state, never committed
+.env
+*.db
+*.db-wal
+*.db-shm
+runs/
+var/
+results.md
+report.html
+
+# Upstream maintainer tests for the real_bugs dataset are never committed: they
+# come from other people's repositories and must not leak into a prompt through
+# this one. The seeded and injection hidden tests are ours, and are committed,
+# under eval/datasets/*/hidden/.
+eval/hidden/**/*.py
+!eval/hidden/README.md
+eval/datasets/real_bugs/hidden/*.py
+!eval/datasets/real_bugs/hidden/README.md
+
+# real_bugs target repositories, fetched and pinned by
+# scripts/fetch_real_bugs.py. Real forks of other people's projects: never
+# vendored into this one.
+eval/real_bugs_repos/
+
+# Generated evaluation output.
+eval/out/
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
+.hypothesis/

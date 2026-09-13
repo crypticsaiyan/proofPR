@@ -1,0 +1,27 @@
+# Keep the build context small and never ship state or secrets.
+.git/
+.github/
+.venv/
+.env
+.env.*
+!.env.example
+**/__pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+var/
+runs/
+*.db
+*.db-wal
+*.db-shm
+tests/
+eval/
+docs/
+migrations/
+sandbox/
+results.md
+report.html

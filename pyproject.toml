@@ -1,0 +1,187 @@
+[project]
+name = "proofpr"
+version = "0.0.0"
+description = "Turns Discord bug reports into proof-carrying pull requests, or an honest decline."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = { text = "Apache-2.0" }
+authors = [{ name = "ProofPR" }]
+keywords = ["agent", "triage", "github", "linear", "discord"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3.12",
+  "Typing :: Typed",
+]
+dependencies = [
+  "typer>=0.15",
+  "pydantic>=2.10",
+  "pydantic-settings>=2.7",
+  "httpx>=0.28",
+  "tenacity>=9.0",
+  "structlog>=24.4",
+  "rich>=13.9",
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.34",
+  "discord-py>=2.4",
+  "apscheduler>=3.11",
+  "docker>=7.1",
+  "opentelemetry-api>=1.29",
+  "opentelemetry-sdk>=1.29",
+  "opentelemetry-exporter-otlp-proto-http>=1.29",
+  "pyyaml>=6.0",
+  "gql[httpx]>=3.5",
+]
+
+[project.optional-dependencies]
+dev = [
+  "ruff>=0.9",
+  "mypy>=1.14",
+  "pytest>=8.3",
+  "pytest-asyncio>=0.25",
+  "pytest-cov>=6.0",
+  "respx>=0.22",
+  "hypothesis>=6.123",
+  "pre-commit>=4.0",
+  "pip-audit>=2.7",
+  "types-pyyaml>=6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/OWNER/proofpr"
+Documentation = "https://github.com/OWNER/proofpr/tree/main/docs"
+Changelog = "https://github.com/OWNER/proofpr/blob/main/CHANGELOG.md"
+
+[project.scripts]
+proofpr = "proofpr.cli:app"
+proofpr-bot = "proofpr.bot:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/proofpr"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests", "eval"]
+# The sample target repository carries deliberate bugs and is never imported by
+# this package. Linting it would only teach the linter to dislike the fixtures.
+# Hidden maintainer tests are held-out data written the way a maintainer would
+# write them; formatting them to this project's taste would misrepresent them.
+extend-exclude = [
+  "tests/fixtures/validkit",
+  "eval/datasets/*/hidden",
+  # Fixed answers standing in for model output. They are data, and formatting
+  # them to this project's taste would make them less like what a model returns.
+  "eval/scripted/fixes",
+  "eval/scripted/tests",
+]
+
+[tool.ruff.lint]
+select = [
+  "E", "F", "W",      # pycodestyle, pyflakes
+  "I",                 # isort
+  "N",                 # pep8-naming
+  "UP",                # pyupgrade
+  "B",                 # bugbear
+  "BLE",               # blind except
+  "A",                 # builtins shadowing
+  "C4",                # comprehensions
+  "DTZ",               # naive datetimes
+  "T20",               # no print
+  "SIM",               # simplify
+  "PTH",               # pathlib
+  "RET",               # returns
+  "ARG",               # unused arguments
+  "TRY",               # exception antipatterns
+  "S",                 # bandit security
+  "ASYNC",             # async antipatterns
+  "D",                 # docstrings
+  "ANN",               # annotations
+  "RUF",
+]
+ignore = [
+  "D203",   # conflicts with D211
+  "D213",   # conflicts with D212
+  "TRY003", # long messages in raise are fine for our error codes
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests assert, use obvious dummy credentials, and name themselves; docstrings on
+# every test method would restate the name. Ambiguous unicode is deliberate: some
+# tests exist to prove lookalike characters are handled.
+"tests/**" = ["S101", "S105", "S106", "S108", "D100", "D102", "D103", "ANN201", "ANN401", "ARG001", "ARG002", "ASYNC240", "N818", "RUF001", "SLF001"]
+"eval/**" = ["T20"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.flake8-annotations]
+mypy-init-return = true
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unreachable = true
+warn_unused_configs = true
+disallow_any_generics = true
+no_implicit_reexport = true
+show_error_codes = true
+plugins = ["pydantic.mypy"]
+files = ["src", "tests"]
+exclude = ["^eval/datasets/", "^eval/hidden/", "^tests/fixtures/validkit/"]
+
+[[tool.mypy.overrides]]
+# The evaluation harness lives in `eval/`, which is a script directory rather
+# than a package: it is deliberately absent from the wheel so the hidden tests
+# cannot be imported from installed code.
+module = [
+  "docker.*", "apscheduler.*", "gql.*", "schema", "runner", "report", "arms", "scripted", "faults",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+# The sample target repository is data, not part of this suite. It is run inside
+# the sandbox, against its own pytest.ini, exactly as a real target repo would be.
+# The defaults are restored explicitly because setting this key replaces them.
+norecursedirs = [
+  "*.egg", ".*", "_darcs", "build", "CVS", "dist", "node_modules", "venv", "{arch}",
+  "tests/fixtures/validkit",
+]
+addopts = "-ra --strict-markers --strict-config --cov=proofpr --cov-report=term-missing -m 'not live'"
+asyncio_mode = "auto"
+markers = [
+  "live: hits real external apps, requires credentials, excluded by default",
+  "docker: needs a docker daemon and the sandbox image, excluded by default",
+  "slow: takes more than a second",
+]
+filterwarnings = [
+  "error",
+  # Starlette's test client prefers httpx2, while the adapters are built on
+  # httpx. Adding a second HTTP client to the dependency tree to silence a
+  # warning in the test client only would be the worse trade.
+  "ignore:Using `httpx` with `starlette.testclient` is deprecated:",
+  # Raised inside starlette's own test client, not by anything this project
+  # calls. Nothing here can fix it, and failing the suite on it would only
+  # pin an old anyio.
+  "ignore:The anyio.abc.BlockingPortal alias is deprecated:DeprecationWarning",
+  # discord.py's voice module imports the stdlib `audioop` at import time of
+  # the top-level `discord` package, whether or not voice is used. This
+  # project has no voice feature; there is nothing here to fix, only
+  # discord.py's own import graph to wait out.
+  "ignore:'audioop' is deprecated and slated for removal in Python 3.13:DeprecationWarning",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["src/proofpr"]
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:", "raise NotImplementedError"]
