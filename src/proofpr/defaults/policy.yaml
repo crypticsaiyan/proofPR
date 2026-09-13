@@ -1,0 +1,81 @@
+# Operation allowlist. See AGENTS.md section 6.1.
+#
+# Tighten-only: this file may add restrictions at any time. Adding or widening an
+# operation requires an ADR and a CODEOWNERS review. Anything absent is refused,
+# recorded as a guard_blocked event, and counted in the evaluation.
+
+version: 1
+
+discord:
+  allowed:
+    - op: reply
+      constraint: only in the thread of the intake message for this run
+    - op: edit_status_message
+      constraint: only the status message created by this run
+    - op: add_reaction
+  denied_always:
+    - mention_everyone
+    - mention_role
+    - kick
+    - ban
+    - delete_message
+  payload_rules:
+    allowed_mentions: none
+
+github:
+  allowed:
+    - op: create_branch
+      constraint: name must start with the configured branch_prefix
+    - op: push
+      constraint: only to the branch created by this run
+    - op: open_pr
+      constraint: draft, base is the default branch, head is this run's branch
+    - op: mark_ready
+      constraint: only this run's PR, only after CI reports success
+    - op: comment
+      constraint: only on this run's PR
+    - op: delete_branch
+      constraint: only this run's own branch, which must carry the configured prefix
+  denied_always:
+    - merge
+    - close_issue
+    - add_collaborator
+    - change_branch_protection
+    - edit_workflow
+    - push_to_default_branch
+    - force_push
+    - create_release
+    - delete_branch_of_another_run
+  diff_rules:
+    may_touch: ["src/**"]
+    may_add_one_file_under: ["tests/**"]
+    never_touch: [".github/**", "pyproject.toml", "conftest.py", "uv.lock"]
+    never_delete_existing_tests: true
+
+linear:
+  allowed:
+    - op: create_issue
+      constraint: only in the configured team
+    - op: update_issue
+      constraint: only the issue created or matched by this run
+    - op: comment
+      constraint: only the issue created or matched by this run
+    - op: attach_url
+      constraint: only onto the issue created or matched by this run
+  denied_always:
+    - delete_issue
+    - archive_issue
+    - change_team_settings
+    - modify_unrelated_issue
+
+egress:
+  # Applied to every outbound payload before it leaves the process.
+  reject_if_contains:
+    - canary_value
+    - "ghp_"
+    - "github_pat_"
+    - "lin_api_"
+    - "sntrys_"
+    - "sk-or-"
+  reject_if_matches_env_value: true
+  max_payload_bytes: 65536
