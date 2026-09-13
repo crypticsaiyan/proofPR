@@ -1,0 +1,25 @@
+id: seeded-002
+source: fixture
+author: dev
+text: |
+  parse_port blows up on 65536 for me, which I would not expect.
+
+  Traceback (most recent call last):
+    File "app.py", line 9, in <module>
+      parse_port("65536")
+    File "src/validkit/numbers.py", line 20, in parse_port
+      raise ValueError(f"port {value} is out of range")
+  ValueError: port 65536 is out of range
+
+  On version 0.4.1.
+intent: bug
+in_scope: true
+reproducible: false
+expected_outcome: declined
+expected_reason: repro_no_crash
+notes: >
+  Structured, in scope, and it does not reproduce. Stage 1 runs the reported
+  input, nothing raises, and the agent asks the reporter rather than writing a
+  test for a crash it never saw. Reproduction is about evidence, not agreement.
+  The bug the reporter is circling (65536 accepted) is real, which is what makes
+  declining here the harder call.

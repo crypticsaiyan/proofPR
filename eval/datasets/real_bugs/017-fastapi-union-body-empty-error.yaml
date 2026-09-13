@@ -1,0 +1,21 @@
+id: real-017
+source: github
+author: ben
+repo_url: https://github.com/tiangolo/fastapi
+buggy_commit: bf229ad5d830eb5320f966d51a55e590e8d57008
+fixed_commit: 06eb4219345a77d23484528c9d164eb8d2097fec
+package: fastapi
+text: |
+  A route whose body is declared as Union[ExtendedData, SimpleData] throws
+  an empty ValidationError (value_error.missing, no field named) even when I
+  send a fully valid payload that matches ExtendedData. The generated
+  docs/schema look right, it's only calling the route that breaks.
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Upstream issue:
+  https://github.com/tiangolo/fastapi/issues/300. Hidden maintainer test:
+  eval/datasets/real_bugs/hidden/real-017.py, the whole (124-line,
+  self-contained) tests/test_union_body.py at the fixed commit.

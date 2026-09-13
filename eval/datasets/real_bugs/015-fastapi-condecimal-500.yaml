@@ -1,0 +1,24 @@
+id: real-015
+source: github
+author: tam
+repo_url: https://github.com/tiangolo/fastapi
+buggy_commit: cc4c13e4ae3f65fc76c23962b316df4a60e0c7e0
+fixed_commit: 19c77e35bdde33aeec1eb2cfa680f95016492b69
+package: fastapi
+text: |
+  A request that fails a condecimal constraint returns a 500 instead of a
+  422: the server log shows a raw TypeError, not a validation-error
+  response.
+
+  Plain pydantic raises a normal ValidationError for the same input outside
+  of FastAPI, so this looks specific to how FastAPI serializes the error
+  detail for this kind of constraint.
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Upstream issue:
+  https://github.com/tiangolo/fastapi/issues/743. Hidden maintainer test:
+  eval/datasets/real_bugs/hidden/real-015.py, the whole (161-line,
+  self-contained) tests/test_multi_body_errors.py at the fixed commit.

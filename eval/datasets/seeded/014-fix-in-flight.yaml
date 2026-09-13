@@ -1,0 +1,25 @@
+id: seeded-014
+source: fixture
+author: nina
+text: |
+  parse_date raises TypeError for month 13 on 0.4.1.
+
+  Traceback (most recent call last):
+    File "app.py", line 12, in <module>
+      parse_date("2024-13-01")
+    File "src/validkit/dates.py", line 30, in parse_date
+      if day > length:
+  TypeError: '>' not supported between instances of 'int' and 'NoneType'
+intent: bug
+fix_in_flight_pr: "900"
+in_scope: true
+reproducible: true
+expected_outcome: fix_in_flight
+seed:
+  - app: github
+    title: Fix TypeError in parse_date for an invalid month
+    body: |
+      src/validkit/dates.py parse_date raises TypeError when the month is out of
+      range.
+    state: open
+notes: A fix is already open. The reporter gets the pull request link.

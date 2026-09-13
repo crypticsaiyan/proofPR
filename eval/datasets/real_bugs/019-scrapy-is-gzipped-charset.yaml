@@ -1,0 +1,25 @@
+id: real-019
+source: github
+author: kofi
+repo_url: https://github.com/scrapy/scrapy
+buggy_commit: b7553d921afe356ec858bb1d2e5b1702df05ea24
+fixed_commit: d43a35735a062a4260b002cfbcd3236c77ef9399
+package: scrapy
+text: |
+  A site of mine serves gzip content with:
+
+      Content-Type: application/x-gzip;charset=utf-8
+
+  and SitemapSpider never even tries to gunzip it, so the sitemap never
+  parses. Looks like scrapy.utils.gz.is_gzipped does an exact string
+  comparison against the content-type and doesn't account for a trailing
+  charset.
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Upstream issue:
+  https://github.com/scrapy/scrapy/issues/2049. Hidden maintainer test:
+  eval/datasets/real_bugs/hidden/real-019.py, the whole (68-line,
+  self-contained) tests/test_utils_gz.py at the fixed commit.

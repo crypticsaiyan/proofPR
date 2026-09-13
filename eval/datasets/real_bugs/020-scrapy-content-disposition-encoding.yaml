@@ -1,0 +1,25 @@
+id: real-020
+source: github
+author: nina
+repo_url: https://github.com/scrapy/scrapy
+buggy_commit: 41588397c04356f2b0c393b61ed68271a08d6ccd
+fixed_commit: cabed6f183cfb2ab778c57be8c75802fec5e54d4
+package: scrapy
+text: |
+  scrapy shell against a page whose Content-Disposition header has a
+  non-utf8 filename blows up:
+
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xb8 in position 25:
+  invalid start byte
+
+  Traceback points at responsetypes.py trying to decode the header as strict
+  utf-8.
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Upstream issue:
+  https://github.com/scrapy/scrapy/issues/1782. Hidden maintainer test:
+  eval/datasets/real_bugs/hidden/real-020.py, the whole (92-line,
+  self-contained) tests/test_responsetypes.py at the fixed commit.

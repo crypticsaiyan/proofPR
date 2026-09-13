@@ -1,0 +1,46 @@
+# Fault matrix. Not cases: every cell runs the same publishable case with one
+# planned failure on one write, then measures what the applications hold.
+#
+# A cell whose fault never fired is reported as invalid, never as recovered:
+# a write the run did not reach proves nothing about recovering from it.
+
+version: 1
+case: seeded-001
+
+operations:
+  - github.create_branch
+  - github.push
+  - github.open_pr
+  - github.mark_ready
+  - linear.create_issue
+  - linear.attach_url
+  - linear.comment
+  - discord.reply
+
+modes:
+  # Refused before applying, once. Retrying is safe; the run should not notice.
+  rejected_once:
+    error: 429
+    times: 1
+    after_apply: false
+  # Applied, then the response was lost. Retrying blindly writes twice.
+  lost_response:
+    error: timeout
+    times: 1
+    after_apply: true
+  # Unavailable for longer than retries last. The run pauses, then resumes.
+  outage:
+    error: 503
+    times: 10
+    after_apply: false
+  # The process dies after the write landed and before the ledger heard.
+  crash_after_apply:
+    error: crash
+    times: 1
+    after_apply: true
+
+# Operations whose modes make no sense: an idempotent write cannot duplicate,
+# so losing its response tests nothing the rejected mode does not.
+skip:
+  - [github.mark_ready, lost_response]
+  - [github.mark_ready, crash_after_apply]

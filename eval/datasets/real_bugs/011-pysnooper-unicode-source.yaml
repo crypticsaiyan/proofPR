@@ -1,0 +1,25 @@
+id: real-011
+source: github
+author: ines
+repo_url: https://github.com/cool-RR/PySnooper
+buggy_commit: e21a31162f4c54be693d8ca8260e42393b39abd3
+fixed_commit: 56f22f8ffe1c6b2be4d2cf3ad1987fdb66113da2
+package: pysnooper
+text: |
+  Decorating a function with @pysnooper.snoop() blows up on python3.7 when
+  the source file has no coding declaration and prints non-ascii output:
+
+  UnicodeEncodeError: 'gbk' codec can't encode character '�' in
+  position 69: illegal multibyte sequence
+
+  Points at tracer.py's FileWriter.write, which opens the log file without
+  an explicit encoding.
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Upstream issue:
+  https://github.com/cool-RR/PySnooper/issues/124. Hidden maintainer test:
+  eval/datasets/real_bugs/hidden/real-011.py, the whole (48-line,
+  self-contained) tests/test_chinese.py at the fixed commit.

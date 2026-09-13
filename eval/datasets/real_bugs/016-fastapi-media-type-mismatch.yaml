@@ -1,0 +1,22 @@
+id: real-016
+source: github
+author: nadia
+repo_url: https://github.com/tiangolo/fastapi
+buggy_commit: a7a92bc63768ccee3f3afc2b73b2c581928dfe75
+fixed_commit: c5817912d2be25bb310bf9da517882f57bbe7bb5
+package: fastapi
+text: |
+  Declared a body param as Body(..., media_type='application/vnd+json.api',
+  embed=True), but the generated openapi.json still lists application/json
+  under requestBody.content instead of the media_type I actually set.
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Upstream issue:
+  https://github.com/tiangolo/fastapi/issues/431 (this one is itself a clean
+  bug report, used directly). Hidden maintainer test:
+  eval/datasets/real_bugs/hidden/real-016.py, the whole (67-line,
+  self-contained) tests/test_request_body_parameters_media_type.py at the
+  fixed commit.

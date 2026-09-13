@@ -1,0 +1,23 @@
+id: real-013
+source: github
+author: farah
+repo_url: https://github.com/cookiecutter/cookiecutter
+buggy_commit: c15633745df6abdb24e02746b82aadb20b8cdf8c
+fixed_commit: 7f6804c4953a18386809f11faf4d86898570debc
+package: cookiecutter
+text: |
+  Running cookiecutter on Windows, the default values shown at the prompts
+  (and the values written into generated files, e.g. LICENSE) come out
+  mangled for anything non-ascii, an author name in particular. Same
+  template works fine on Linux. Looks like the context JSON gets opened with
+  whatever the platform's default encoding is instead of utf-8.
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Upstream report/fix:
+  https://github.com/cookiecutter/cookiecutter/pull/1414. Hidden maintainer
+  test: eval/datasets/real_bugs/hidden/real-013.py, the whole (171-line,
+  self-contained) tests/test_generate_context.py at the fixed commit; its
+  fixture JSON files already live in that repo's tests/ directory.

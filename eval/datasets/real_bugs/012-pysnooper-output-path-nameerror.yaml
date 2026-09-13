@@ -1,0 +1,26 @@
+id: real-012
+source: github
+author: lucas
+repo_url: https://github.com/cool-RR/PySnooper
+buggy_commit: 6e3d797be3fa0a746fb5b1b7c7fea78eb926c208
+fixed_commit: 15555ed760000b049aff8fecc79d29339c1224c3
+package: pysnooper
+text: |
+  pysnooper.snoop(output='some/path.log') blows up immediately on import,
+  before the decorated function even runs:
+
+  NameError: global name 'output_path' is not defined
+
+  Any string output path triggers it, not just this particular one.
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Upstream issue:
+  https://github.com/cool-RR/PySnooper/issues/2. Hidden maintainer test:
+  eval/datasets/real_bugs/hidden/real-012.py, the whole (199-line)
+  tests/test_pysnooper.py at the fixed commit. That file needs the
+  third-party `python-toolbox` package (already in this case's pinned
+  requirements) and imports a sibling tests/utils.py that already exists in
+  the real checkout.

@@ -1,0 +1,25 @@
+id: real-007
+source: github
+author: elena
+repo_url: https://github.com/tqdm/tqdm
+buggy_commit: 9da1d5d116aec7a23d8f6dc22d5e23ecb1c40a7c
+fixed_commit: d877c1dfb4739852105f7b967a8fceb869ac5042
+package: tqdm
+hidden_test_path: tqdm/tests/test_hidden_maintainer.py
+text: |
+  A byte count right at a unit boundary prints wrong: something like 999.96
+  bytes comes out as "1000.00" instead of rolling over to "1.00K". Looks like
+  the rounding happens after the unit-boundary check runs instead of before
+  it, so a value that rounds up into the next unit still gets compared
+  against the old one.
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. No separate upstream issue thread was found for this
+  2015-era commit; the report above is written from the real symptom, and the
+  closest primary source is the fix commit's own message ("SI unit boundary
+  bugfix"). Hidden maintainer test: eval/datasets/real_bugs/hidden/real-007.py,
+  the whole (small, self-contained) tests/tests_tqdm.py as it stood at the
+  fixed commit, which at that point in tqdm's history was only 229 lines.

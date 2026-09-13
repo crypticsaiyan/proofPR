@@ -1,0 +1,21 @@
+id: real-010
+source: github
+author: mateo
+repo_url: https://github.com/httpie/cli
+buggy_commit: 16df8848e81eefac830f407e4b985f42b52970da
+fixed_commit: 90af1f742230831792d74d303d1e7ce56c96d4bd
+package: httpie
+text: |
+  curl lets you send a form field whose value has a colon in it, e.g.
+  curl -Ffoo:bar=baz. There's no way to do the httpie equivalent: any colon
+  inside the value gets parsed as another key:value separator instead of
+  staying part of the value.
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Upstream issue: https://github.com/httpie/cli/issues/39,
+  fixed via https://github.com/httpie/cli/pull/44. Hidden maintainer test:
+  eval/datasets/real_bugs/hidden/real-010.py, the whole (189-line,
+  self-contained) tests/tests.py at the fixed commit.

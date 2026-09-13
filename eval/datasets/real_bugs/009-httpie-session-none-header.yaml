@@ -1,0 +1,25 @@
+id: real-009
+source: github
+author: deepa
+repo_url: https://github.com/httpie/cli
+buggy_commit: 8c33e5e3d31d3cd6476c4d9bc963a4c529f883d2
+fixed_commit: 589887939507ff26d36ec74bd2c045819cfa3d56
+package: httpie
+text: |
+  http --session=test --download <url> blows up while writing the session
+  file:
+
+  AttributeError: 'NoneType' object has no attribute 'decode'
+
+  Only happens with --session together with --download. Without --session it
+  downloads fine.
+
+  HTTPie 0.9.2, Requests 2.7.0, python 2.7.10
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Upstream issue: https://github.com/httpie/cli/issues/412.
+  Hidden maintainer test: eval/datasets/real_bugs/hidden/real-009.py, the whole
+  (188-line, self-contained) tests/test_sessions.py at the fixed commit.

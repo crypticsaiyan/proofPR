@@ -1,0 +1,16 @@
+id: seeded-012
+source: fixture
+author: dev
+text: |
+  Crash on version 0.4.1 when parsing config.
+
+  Traceback (most recent call last):
+    File "/usr/lib/python3.12/json/decoder.py", line 355, in raw_decode
+      raise JSONDecodeError("Expecting value", s, err.value) from None
+  ValueError: Expecting value: line 1 column 1 (char 0)
+intent: bug
+in_scope: false
+reproducible: false
+expected_outcome: out_of_scope
+expected_reason: out_of_allowed_paths
+notes: The failing frame is in the standard library, not in this project.

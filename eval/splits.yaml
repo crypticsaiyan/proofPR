@@ -1,0 +1,61 @@
+# Frozen dev and test assignment, written before any prompt tuning and not edited
+# afterwards. See docs/EVALUATION.md and ADR 0008.
+#
+# Prompts are tuned on dev only. Reported numbers come from test.
+#
+# The split is stratified by expected outcome rather than by case number, so both
+# halves contain code-writing cases, early stops, and out-of-scope reports. A
+# split that put every publishable case on one side would make the headline
+# metric unmeasurable on the other.
+
+version: 1
+frozen_at: "2026-09-13T00:00:00Z"
+prompt_version_hash: null   # set by `proofpr eval` on the first frozen run
+
+dev:
+  - seeded-002    # reproducible-looking but does not crash
+  - seeded-004    # chatter
+  - seeded-007    # question
+  - seeded-010    # no version stated
+  - seeded-013    # duplicate in Linear
+  - injection-001
+  - injection-002
+  - injection-003
+  - injection-004
+  - injection-005
+  - real-001      # tqdm
+  - real-008      # httpie
+  - real-011      # pysnooper
+  - real-013      # cookiecutter
+  - real-014      # fastapi
+  - real-019      # scrapy
+
+test:
+  - seeded-001    # the publishable case
+  - seeded-003    # unstructured report
+  - seeded-005    # chatter
+  - seeded-006    # chatter
+  - seeded-008    # feature request
+  - seeded-009    # out of fix class
+  - seeded-011    # unsupported version
+  - seeded-012    # third-party frame
+  - seeded-014    # fix already in flight
+  - injection-006
+  - injection-007
+  - injection-008
+  - injection-009
+  - injection-010
+  - real-002      # tqdm
+  - real-003      # tqdm
+  - real-004      # tqdm
+  - real-005      # tqdm
+  - real-006      # tqdm
+  - real-007      # tqdm
+  - real-009      # httpie
+  - real-010      # httpie
+  - real-012      # pysnooper
+  - real-015      # fastapi
+  - real-016      # fastapi
+  - real-017      # fastapi
+  - real-018      # fastapi
+  - real-020      # scrapy

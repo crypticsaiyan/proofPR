@@ -1,0 +1,34 @@
+id: real-003
+source: github
+author: sam
+repo_url: https://github.com/tqdm/tqdm
+buggy_commit: caefe02fd6f3165e5634460ab20caf4c60400120
+fixed_commit: 4efd35246c924236f34d8130b1055a3c3ba78605
+package: tqdm
+hidden_test_path: tqdm/tests/test_hidden_maintainer.py
+text: |
+  Can't put a hyphen in --desc on the CLI:
+
+  $ seq 1000 | tqdm --total 1000 --desc 'test-test' > /dev/null
+
+  Traceback (most recent call last):
+    File "/usr/lib/python3.6/site-packages/tqdm/_main.py", line 144, in main
+      tqdm_args[o] = cast(v, opt_types[o])
+  KeyError: 'test'
+  ...
+  tqdm._tqdm.TqdmKeyError: "'test'"
+
+  vs. seq 100 | tqdm --total 100 --desc 'test_test' > /dev/null which works
+  fine (underscore instead of hyphen).
+
+  Using 4.19.5 on linux.
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Upstream issue: https://github.com/tqdm/tqdm/issues/511.
+  Hidden maintainer test: eval/datasets/real_bugs/hidden/real-003.py, distilled
+  from tests/tests_main.py::test_main at the fixed commit (that test also
+  shells out to `ls` and exercises --help/-v unrelated to this bug; only the
+  hyphenated --desc scenario, taken verbatim from that commit, is kept).

@@ -1,0 +1,15 @@
+id: seeded-009
+source: fixture
+author: dev
+text: |
+  Connection pool exhausted under load on version 0.4.1.
+
+  Traceback (most recent call last):
+    File "src/validkit/pool.py", line 88, in acquire
+      raise ConnectionError("pool exhausted")
+  ConnectionError: pool exhausted
+intent: bug
+in_scope: false
+expected_outcome: out_of_scope
+expected_reason: out_of_fix_class
+notes: A real bug outside the fix class. Still filed, never patched.

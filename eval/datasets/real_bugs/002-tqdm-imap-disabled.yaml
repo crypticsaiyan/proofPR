@@ -1,0 +1,36 @@
+id: real-002
+source: github
+author: priya
+repo_url: https://github.com/tqdm/tqdm
+buggy_commit: a4b9c86db548b2d0dbb5af7a6bbdc26ab47e1eec
+fixed_commit: 6dad2e89019317e875c46d5a3a82a811ad6de2f9
+package: tqdm
+hidden_test_path: tqdm/tests/test_hidden_maintainer.py
+text: |
+  Wrapping a multiprocessing Pool.imap in tqdm with disable=True blows up:
+
+      from tqdm import tqdm
+      from multiprocessing import Pool
+
+      def f(arg):
+          pass
+
+      if __name__ == '__main__':
+          pool = Pool()
+          list(tqdm(pool.imap(f, range(100)), disable=True))
+
+  AttributeError: 'tqdm' object has no attribute 'total'
+
+  Removing disable=True (or setting it to False) makes it work fine.
+
+  tqdm 4.22.0, python 3.6.0, Win64
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Upstream issue: https://github.com/tqdm/tqdm/issues/539.
+  Hidden maintainer test: eval/datasets/real_bugs/hidden/real-002.py, distilled
+  from tests/tests_synchronisation.py::test_imap at the fixed commit (the
+  original file also imports fixtures from a sibling test module unrelated to
+  this bug; only what test_imap itself needs is kept).

@@ -1,0 +1,26 @@
+id: real-004
+source: github
+author: noor
+repo_url: https://github.com/tqdm/tqdm
+buggy_commit: c2599e3cd6087429f48bae34347ec5d2473c8392
+fixed_commit: 73962a47026dd980ac0758820efc9c41cbf938e0
+package: tqdm
+hidden_test_path: tqdm/tests/test_hidden_maintainer.py
+text: |
+  bool() on a tqdm wrapping a generator blows up:
+
+  In [28]: bool(tqdm.tqdm((1 for i in range(10))))
+  TypeError: 'NoneType' object cannot be interpreted as an integer
+
+  tqdm 4.29.1, python 3.6.6, linux. Would expect this to mirror whatever
+  bool(self.iterable) gives instead of raising.
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Reported in PR https://github.com/tqdm/tqdm/pull/694,
+  which references https://github.com/tqdm/tqdm/issues/353. Hidden maintainer
+  test: eval/datasets/real_bugs/hidden/real-004.py, extracted from
+  tests/tests_tqdm.py::test_bool as it stood at the fixed commit (a later
+  revision of the same test real-001 uses, now covering generators too).

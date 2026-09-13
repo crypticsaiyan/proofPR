@@ -1,0 +1,26 @@
+id: real-008
+source: github
+author: ravi
+repo_url: https://github.com/httpie/cli
+buggy_commit: 001bda19450ad85c91345eea3cfa3991e1d492ba
+fixed_commit: 5300b0b490b8db48fac30b5e32164be93dc574b7
+package: httpie
+text: |
+  http -d on a URL with a very long generated filename blows up:
+
+      http: error: OSError: [Errno 36] File name too long: '<288 character
+      filename>.jpg'
+
+  wget shortens filenames like this automatically in the same situation,
+  httpie doesn't. Works fine with -o filename to name it myself.
+
+  httpie 0.9.3
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo (moved from jakubroztocil/httpie to httpie/cli upstream).
+  Upstream issue: https://github.com/httpie/cli/issues/451. Hidden maintainer
+  test: eval/datasets/real_bugs/hidden/real-008.py, the whole (165-line,
+  self-contained) tests/test_downloads.py at the fixed commit.

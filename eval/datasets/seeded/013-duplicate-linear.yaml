@@ -1,0 +1,27 @@
+id: seeded-013
+source: fixture
+author: nina
+text: |
+  parse_date explodes when the month is 13, on 0.4.1.
+
+  Traceback (most recent call last):
+    File "app.py", line 12, in <module>
+      parse_date("2024-13-01")
+    File "src/validkit/dates.py", line 30, in parse_date
+      if day > length:
+  TypeError: '>' not supported between instances of 'int' and 'NoneType'
+intent: bug
+duplicate_of: ENG-1000
+in_scope: true
+reproducible: true
+expected_outcome: duplicate
+seed:
+  - app: linear
+    title: TypeError in parse_date on an invalid month
+    body: |
+      File "src/validkit/dates.py", line 30, in parse_date
+      TypeError: unsupported operand
+    state: open
+notes: >
+  The same defect is already filed. Ends in seconds, with no sandbox and no
+  strong model call.

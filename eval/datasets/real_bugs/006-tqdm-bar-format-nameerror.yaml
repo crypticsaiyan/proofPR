@@ -1,0 +1,27 @@
+id: real-006
+source: github
+author: wei
+repo_url: https://github.com/tqdm/tqdm
+buggy_commit: 08b8ad1ff3bd003ef8309faaa0cc108ffa40317d
+fixed_commit: cae9d139c6df5614be3bf6e25ccbd600ee3286dc
+package: tqdm
+hidden_test_path: tqdm/tests/test_hidden_maintainer.py
+text: |
+  Passing a custom bar_format that includes {bar} blows up:
+
+      tqdm(range(100), bar_format='{l_bar}{bar}|{n_fmt}/{total_fmt}')
+
+  NameError: name 'l_bar' is not defined
+
+  Works fine with the default bar_format (no custom string).
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. No separate upstream issue thread was found for this
+  2016-era commit; the report above is written from the real symptom, and the
+  closest primary source is the fix commit's own message ("Fix a bug with new
+  bar_format"). Hidden maintainer test: eval/datasets/real_bugs/hidden/real-006.py,
+  tests/tests_tqdm.py::test_format_meter at the fixed commit (fully
+  self-contained already).

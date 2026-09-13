@@ -1,0 +1,11 @@
+id: seeded-008
+source: fixture
+author: kim
+text: |
+  Could validate_email support internationalised domains? Anything with non-ASCII
+  in the domain is rejected today, and we would like it accepted.
+intent: feature
+in_scope: false
+expected_outcome: not_a_bug
+expected_reason: not_a_bug_report
+notes: Asks for behaviour that does not exist yet, politely and in detail.

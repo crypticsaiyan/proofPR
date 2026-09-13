@@ -1,0 +1,31 @@
+id: real-001
+source: github
+author: theo
+repo_url: https://github.com/tqdm/tqdm
+buggy_commit: 19b08ab34fdbfa0275bc5cb2430436c724c7e759
+fixed_commit: 4f340697af69b71850aad496387c9c5aa1904136
+package: tqdm
+hidden_test_path: tqdm/tests/test_hidden_maintainer.py
+text: |
+  bool(pbar) blows up when the bar was made with disable=True:
+
+  In [3]: pbar = tqdm(disable=False, total=100)
+  In [4]: bool(pbar)
+  Out[4]: True
+
+  In [5]: pbar = tqdm(disable=True, total=100)
+  In [6]: bool(pbar)
+  AttributeError: 'tqdm' object has no attribute 'total'
+
+  Works fine with disable=False. I'd expect the disabled case to just
+  evaluate to False, not blow up.
+
+  tqdm 4.23.4, python 3.5.2, linux
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Upstream issue: https://github.com/tqdm/tqdm/issues/574.
+  Hidden maintainer test: eval/datasets/real_bugs/hidden/real-001.py, extracted
+  from tests/tests_tqdm.py::test_bool at the fixed commit.

@@ -1,0 +1,25 @@
+id: real-014
+source: github
+author: oskar
+repo_url: https://github.com/tiangolo/fastapi
+buggy_commit: 5db99a27cf640864b4793807811848698c5ff4a2
+fixed_commit: 874d24181e779ebc6e1c52afb7d6598f863fd6a8
+package: fastapi
+text: |
+  Sending repeated form keys, e.g. choices=parrot&choices=spider, and only
+  the last one survives:
+
+      choices: list = Form(...)
+
+  I'd expect that to collect both values into the list, the way it already
+  does for a query param, but only 'spider' comes through validation.
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Upstream issue:
+  https://github.com/tiangolo/fastapi/issues/842. Hidden maintainer test:
+  eval/datasets/real_bugs/hidden/real-014.py, the whole (46-line,
+  self-contained) tests/test_forms_from_non_typing_sequences.py at the fixed
+  commit.

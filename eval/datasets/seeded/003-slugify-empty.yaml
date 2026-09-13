@@ -1,0 +1,14 @@
+id: seeded-003
+source: fixture
+author: pat
+text: |
+  slugify("!!!") returns an empty string instead of raising. Silent empty slugs
+  are ending up in our URLs. Version 0.4.1.
+intent: bug
+in_scope: false
+reproducible: false
+expected_outcome: out_of_scope
+expected_reason: insufficient_report
+notes: >
+  No exception and no frame, so there is nothing to localize. Filed for a human
+  rather than guessed at.

@@ -1,0 +1,23 @@
+id: real-018
+source: github
+author: yara
+repo_url: https://github.com/tiangolo/fastapi
+buggy_commit: d61f5e4b555b123bf222503fc0e076cbae6a7ebc
+fixed_commit: d262f6e9296993e528e2327f0a73f7bf5514e7c6
+package: fastapi
+text: |
+  HTTPBearer(auto_error=False) still raises a 403 if the Authorization
+  header uses the wrong scheme (Basic instead of Bearer). auto_error=False
+  is supposed to mean "never raise automatically, hand me None so I can
+  handle it myself" - that only actually works for a missing header today,
+  not a wrong-scheme one.
+intent: bug
+in_scope: true
+reproducible: true
+expected_outcome: pr_opened
+notes: >
+  Real bug, real repo. Found and fixed by the maintainer directly, no
+  separate issue thread: https://github.com/tiangolo/fastapi/pull/282.
+  Hidden maintainer test: eval/datasets/real_bugs/hidden/real-018.py, the
+  whole (68-line, self-contained) tests/test_security_http_bearer_optional.py
+  at the fixed commit.
