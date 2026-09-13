@@ -1,0 +1,7 @@
+*                       @OWNER
+
+# The security boundary and the evaluation ground truth change only deliberately.
+/src/proofpr/guard/     @OWNER
+/src/proofpr/defaults/policy.yaml  @OWNER
+/eval/splits.yaml       @OWNER
+/eval/hidden/           @OWNER

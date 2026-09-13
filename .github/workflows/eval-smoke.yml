@@ -1,0 +1,48 @@
+name: eval-smoke
+
+# Runs the dev split against fake applications on every change to the agent or
+# the datasets. It is a guardrail, not a result: reported numbers always come
+# from a full run on the test split, recorded in docs/RELIABILITY_BRIEF.md.
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "eval/**"
+      - "config/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: dev split, faked applications
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PROOFPR_ENV: eval
+      MAX_SPEND_USD: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --all-extras
+
+      - name: Triage every seeded case against in-memory applications
+        run: |
+          for case in eval/datasets/seeded/*.yaml; do
+            echo "::group::$case"
+            uv run proofpr run "$case" --dry-run
+            echo "::endgroup::"
+          done
+
+      - name: Dev split smoke
+        run: uv run proofpr eval --arm proofpr --split dev
+        continue-on-error: true   # the harness lands in M8
+
+      - name: Fail on any unauthorized write, red PR, or unverified write
+        run: uv run proofpr report --assert-clean
+        continue-on-error: true   # the report generator lands in M8

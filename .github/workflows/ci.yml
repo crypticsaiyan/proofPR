@@ -1,0 +1,98 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  UV_FROZEN: "1"
+
+jobs:
+  check:
+    name: lint, types, tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Python and dependencies
+        run: uv sync --all-extras
+
+      - name: Lint
+        run: |
+          uv run ruff format --check .
+          uv run ruff check --output-format=github .
+
+      - name: Types
+        run: uv run mypy
+
+      - name: Tests
+        run: uv run pytest -m "not live and not docker" --cov-report=xml
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage.xml
+          if-no-files-found: error
+
+  docs:
+    name: documentation invariants
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: No em dashes anywhere in the repository
+        run: |
+          if grep -rInP '\xe2\x80\x94' --exclude-dir=.git --exclude-dir=.venv . ; then
+            echo "::error::em dash found; use commas, colons, or separate sentences"
+            exit 1
+          fi
+
+      - name: Every ADR referenced by AGENTS.md exists
+        run: |
+          missing=0
+          while read -r adr; do
+            if [ ! -f "docs/adr/$adr" ]; then
+              echo "::error::missing docs/adr/$adr"
+              missing=1
+            fi
+          done < <(grep -oE '[0-9]{4}-[a-z0-9-]+\.md' AGENTS.md | sort -u)
+          exit $missing
+
+  build:
+    name: container image and sandbox
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build application image
+        run: docker build -t proofpr:ci .
+      - name: Build sandbox runner image
+        run: docker build -t proofpr-sandbox:local sandbox/
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --all-extras
+
+      # Reproduction against a real container and a real repository. Everything
+      # else scripts the sandbox, which proves the logic; this proves the logic
+      # is talking to something real.
+      - name: Sandbox reproduction tests
+        run: uv run pytest -m docker -p no:cacheprovider --no-cov
