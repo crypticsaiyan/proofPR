@@ -1,0 +1,55 @@
+# ProofPR non-secret configuration. Copy to config/proofpr.toml.
+# Secrets live in .env only. Every key is documented in docs/CONFIGURATION.md.
+
+[repo]
+owner = "crypticsaiyan"
+name = "Ephemeris"
+# Importable package name, when it differs from the repository name. A list names
+# several flat top-level modules, for a project that keeps them directly in src/.
+package = ["agent", "era", "indexing", "manifest", "mission_meta", "nasa", "reel", "schema", "speech", "understanding", "videodb_client"]
+# Local checkout the sandbox copies a worktree from. Reproduction is skipped when
+# this is unset or missing, and the run says so rather than pretending nothing
+# reproduced.
+local_path = "var/targets/Ephemeris"
+default_branch = "main"
+branch_prefix = "proofpr/"
+supported_versions = ""                # Ephemeris publishes no versions: none is required
+
+[fix_class]
+# The single class of bug the agent is permitted to patch.
+allowed = ["input_validation", "bad_type_handling"]
+patch_paths = ["src/**"]
+test_paths = ["tests/**"]
+forbidden_paths = [".github/**", "pyproject.toml", "conftest.py", "uv.lock"]
+
+[triage]
+duplicate_score_threshold = 0.62         # below this, treated as a new report
+clarify_timeout_hours = 24
+max_clarify_questions = 1
+
+[proof]
+flake_runs = 3
+mutation_min_kill_ratio = 1.0            # every mutant on patched lines must die
+require_revert_check = true
+
+[sandbox]
+image = "proofpr-target-ephemeris:local"
+timeout_seconds = 120
+cpus = 1.0
+memory = "1g"
+pids_limit = 256
+
+[approval]
+# A maintainer must approve before anything is pushed. Leaving this true with no
+# approver wired up means nothing is ever published, which is the safe failure.
+required = true
+# Approve without asking. Set by the evaluation harness; never set it in a
+# deployment unless you mean it.
+auto_approve = false
+
+[ci]
+poll_interval_seconds = 15
+timeout_minutes = 20
+
+[reconciler]
+interval_hours = 6
