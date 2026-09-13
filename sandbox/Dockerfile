@@ -9,7 +9,7 @@
 # Pinned by digest in M1 so sandbox results are reproducible. Resolve with:
 #   docker buildx imagetools inspect python:3.12-slim-bookworm
 # then replace the tag below with image@sha256:<digest>.
-FROM python:3.12-slim-bookworm
+FROM python:3.14-slim-bookworm
 
 RUN groupadd --system --gid 10002 runner \
  && useradd --system --uid 10002 --gid runner --home /work --create-home runner
