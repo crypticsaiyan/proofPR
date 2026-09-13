@@ -4,7 +4,7 @@
 # image can be reproduced on any host that has Docker at all.
 
 # --- builder ------------------------------------------------------------------
-FROM python:3.12-slim-bookworm AS builder
+FROM python:3.14-slim-bookworm AS builder
 
 COPY --from=ghcr.io/astral-sh/uv:0.5.29 /uv /usr/local/bin/uv
 
@@ -26,7 +26,7 @@ COPY config/ ./config/
 RUN uv sync --frozen --no-dev
 
 # --- runtime ------------------------------------------------------------------
-FROM python:3.12-slim-bookworm AS runtime
+FROM python:3.14-slim-bookworm AS runtime
 
 LABEL org.opencontainers.image.title="proofpr" \
       org.opencontainers.image.description="Proof-carrying pull requests from chat bug reports" \
