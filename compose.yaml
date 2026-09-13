@@ -1,0 +1,24 @@
+name: proofpr
+
+services:
+  app:
+    build: .
+    image: proofpr:local
+    restart: unless-stopped
+    env_file: [.env]
+    ports:
+      - "8080:8080"
+    volumes:
+      - proofpr-data:/data
+      # The sandbox is launched as a sibling container, so the app needs the
+      # daemon socket. It is read-only and this is the only privileged surface
+      # in the deployment; docs/THREAT_MODEL.md records the residual risk.
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8080/healthz',timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  proofpr-data:
