@@ -133,7 +133,7 @@ no_implicit_reexport = true
 show_error_codes = true
 plugins = ["pydantic.mypy"]
 files = ["src", "tests"]
-exclude = ["^eval/datasets/", "^eval/hidden/", "^tests/fixtures/validkit/"]
+exclude = ["^eval/datasets/", "^tests/fixtures/validkit/"]
 
 [[tool.mypy.overrides]]
 # The evaluation harness lives in `eval/`, which is a script directory rather

@@ -4,4 +4,4 @@
 /src/proofpr/guard/     @OWNER
 /src/proofpr/defaults/policy.yaml  @OWNER
 /eval/splits.yaml       @OWNER
-/eval/hidden/           @OWNER
+/eval/datasets/real_bugs/hidden/ @OWNER

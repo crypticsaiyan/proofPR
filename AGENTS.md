@@ -191,8 +191,8 @@ toward stopping. The agent may over-file; it may never over-code.
 
 ### 3.3 Ports and adapters
 
-Each app sits behind a `Protocol` in `src/proofpr/ports/`. Adapters in
-`src/proofpr/adapters/` implement them. Domain and step code import ports only.
+Each app is an adapter in `src/proofpr/adapters/` with an in-memory fake of the
+same shape in `adapters/memory.py`. Steps receive adapters, never settings.
 Every adapter has an in-memory fake with identical contract tests.
 
 ---
@@ -446,7 +446,6 @@ any operation not listed.
 │   ├── CODEOWNERS
 │   └── pull_request_template.md
 ├── config/                        # local overrides only; defaults ship in the package
-├── migrations/README.md           # pointer; the SQL lives in the package
 ├── sandbox/Dockerfile             # pinned runner image for target repo
 ├── src/proofpr/
 │   ├── defaults/{proofpr.toml, policy.yaml}   # shipped config and allowlist
@@ -457,7 +456,6 @@ any operation not listed.
 │   ├── settings.py
 │   ├── pipeline.py                # durable state machine, sole sequencer
 │   ├── domain/                    # RunState, Report, Claim, Outcome, enums, errors
-│   ├── ports/
 │   ├── adapters/{discord,github,linear,openrouter,docker_sandbox}.py
 │   ├── steps/{sanitize,pre_check,fingerprint,exists,worth_it,localize,repro_raw,
 │   │          test_synth,gate,clarify,patch,proof,approve,publish,ci_wait,

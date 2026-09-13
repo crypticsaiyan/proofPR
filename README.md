@@ -189,7 +189,7 @@ flowchart TD
 | Document | What it answers |
 |---|---|
 | [AGENTS.md](AGENTS.md) | The full design and the rules the agent works to |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Pipeline, durability, resume, ports and adapters |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Pipeline, durability, resume, adapters |
 | [docs/SETUP.md](docs/SETUP.md) | Credentials per app with scopes |
 | [docs/CONFIGURATION.md](docs/CONFIGURATION.md) | Every key and environment variable |
 | [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md) | Trust boundaries and the prompt-injection model |

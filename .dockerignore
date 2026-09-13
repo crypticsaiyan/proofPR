@@ -21,7 +21,6 @@ runs/
 tests/
 eval/
 docs/
-migrations/
 sandbox/
 results.md
 report.html

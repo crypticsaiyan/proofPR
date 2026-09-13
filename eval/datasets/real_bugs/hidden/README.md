@@ -7,7 +7,7 @@ case's `fixed_commit` field.
 **Nothing here but this README is committed.** `.gitignore` excludes every
 `.py` file in this directory.
 
-Rules, without exception, same as `eval/hidden/README.md`:
+Rules, without exception:
 
 1. A file here is never placed in a prompt.
 2. A file here is never mounted into a sandbox the agent can read.

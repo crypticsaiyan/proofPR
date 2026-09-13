@@ -5,15 +5,15 @@
 
 ## Shape
 
-ProofPR is a durable state machine with ports and adapters around it.
+ProofPR is a durable state machine with adapters around it.
 
 - `pipeline.py` is the **only** place steps are sequenced. Nothing else decides
   what happens next.
 - `steps/` holds one module per step. A step is a function of run state plus
-  injected ports, returning the next state and the events it produced. Steps
+  injected adapters, returning the next state and the events it produced. Steps
   never call each other.
-- `ports/` defines protocols. `adapters/` implements them. Steps depend on the
-  protocol only, which is what lets the whole pipeline run against fakes with no
+- `adapters/` talks to each application. `adapters/memory.py` holds in-memory
+  fakes of the same shape, which is what lets the whole pipeline run with no
   credentials.
 - `ledger/` persists append-only events in SQLite WAL mode. It is the source of
   truth for resume and for every evaluation number.
@@ -150,7 +150,7 @@ that quietly does more work than anyone approved.
 
 Ledger schema: `runs`, `events` (append-only, hash chained), `writes` (keyed by
 run, operation and target for idempotent retry), `model_calls`. Migrations are
-forward-only; see `migrations/README.md`.
+forward-only, in `src/proofpr/ledger/migrations/`.
 
 ## Related
 

@@ -27,7 +27,7 @@ benchmarks.
 Option 3. `eval/splits.yaml` assigns every case to `dev` or `test` before any
 prompt tuning, and records the prompt version hash per run. Real-bug cases are
 pinned to the commit before the upstream fix, and the upstream fix's own test is
-kept in `eval/hidden/`, excluded from version control, never mounted into a
+kept in `eval/datasets/real_bugs/hidden/`, excluded from version control, never mounted into a
 sandbox the agent can read, and applied only after a run completes.
 
 ## Consequences
