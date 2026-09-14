@@ -10,10 +10,6 @@ the proof."
 
 > Built for the Multi-App AI Agent Hackathon. Solo project.
 
-## Demo video
-
-Watch on YouTube (under two minutes): https://youtu.be/5CfzpWydM_8
-
 ## The problem
 
 Maintainers get bug reports in Discord. Most are not bugs. The real ones rarely
@@ -203,6 +199,11 @@ flowchart TD
 - **A human approves every pull request.**
 - **It may over-file; it may never over-code.** Uncertainty resolves toward
   filing an issue, never toward writing code.
+
+
+## Demo video
+
+Watch on YouTube (under two minutes): https://youtu.be/5CfzpWydM_8
 
 ## License
 
