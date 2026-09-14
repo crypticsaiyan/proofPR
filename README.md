@@ -12,8 +12,6 @@ the proof."
 
 ## Demo video
 
-[![ProofPR demo](https://img.youtube.com/vi/5CfzpWydM_8/maxresdefault.jpg)](https://youtu.be/5CfzpWydM_8)
-
 Watch on YouTube (under two minutes): https://youtu.be/5CfzpWydM_8
 
 ## The problem
